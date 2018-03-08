@@ -1,0 +1,11 @@
+{
+  "name": "offline-first-reddit",
+  "version": "1.0.0",
+  "description": "A simple frontend app for reddit that uses offline first methods.",
+  "main": "index.js",
+  "author": "Brandon Bodine",
+  "license": "MIT",
+  "dependencies": {
+    "gulp": "^3.9.1"
+  }
+}
