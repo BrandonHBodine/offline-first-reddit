@@ -82,6 +82,6 @@ function getPostsBySelected() {
 
 // Will need updating to make offline first
 // Add event handler
-document.getElementById('getPosts').onclick(getPostsBySelected);
+document.getElementById('getPosts').addEventListener('click', getPostsBySelected);
 // Default load for
 getSubredditPosts('webdev');
