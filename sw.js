@@ -17,6 +17,7 @@ self.addEventListener("install", function(event) {
 
 self.addEventListener("fetch", function(event) {
   let requestUrl = new URL(event.request.url);
+  
   // For a request to homepage respond with the index.html page
   if (requestUrl.origin === location.origin) {
     if (requestUrl.pathname === "/") {

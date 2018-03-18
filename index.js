@@ -1,8 +1,20 @@
 // Service Worker Registration
+// For hositng on github pages I will have to update the scope and the specificity of the sw.js file
+// ('/offline-first-reddit/sw.js', { scope: '/offline-first-reddit/' })
+let root = window.location.hostname;
+let serviceWorkerFilePath = "/sw.js";
+let serviceWorkerScope = { scope: "/" };
+
+if (root !== "127.0.0.1") {
+  console.log("Chaning file paths to work with github pages");
+  serviceWorkerFilePath = "/offline-first-reddit/sw.js";
+  serviceWorkerScope = { scope: "/offline-first-reddit/" };
+}
+
 if ("serviceWorker" in navigator) {
   console.log("Service Workers detected!", "Attempting to register...");
   navigator.serviceWorker
-    .register("/sw.js")
+    .register(serviceWorkerFilePath, serviceWorkerScope)
     .then(function(registration) {
       console.log("Service worker registration succeeded:", registration);
     })
