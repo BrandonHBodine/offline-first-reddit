@@ -1,42 +1,56 @@
-function getSubredditPosts(sub) {
-	return fetch(`https://www.reddit.com/r/${sub}.json`)
-		.then(function(response) {
-			return response.text();
-		})
-		.then(function(text) {
-			let posts = parsePostsToSubData(text);
-			addPosts(posts);
-			// console.log('Request successful', posts);
+// Service Worker Registration
+if ("serviceWorker" in navigator) {
+  console.log("Service Workers detected!", "Attempting to register...");
+  navigator.serviceWorker
+    .register("/sw.js")
+    .then(function(registration) {
+      console.log("Service worker registration succeeded:", registration);
+    })
+    .catch(function(error) {
+      console.log("Service worker registration failed:", error);
+    });
+} else {
+  console.log("The current browser does not support service workers.");
+}
 
-			return posts;
-		})
-		.catch(function(error) {
-			// console.log('Request failed', error);
-		});
+function getSubredditPosts(sub) {
+  return fetch(`https://www.reddit.com/r/${sub}.json`)
+    .then(function(response) {
+      return response.text();
+    })
+    .then(function(text) {
+      let posts = parsePostsToSubData(text);
+      addPosts(posts);
+      // console.log('Request successful', posts);
+      return posts;
+    })
+    .catch(function(error) {
+      console.log("Request failed", error);
+    });
 }
 
 function parsePostsToSubData(subJSON) {
-	let parsed = [];
-	let toParse = JSON.parse(subJSON).data.children;
-	for (let JSONPost of toParse) {
-		let title = JSONPost.data.title;
-		let selftext = JSONPost.data.selftext;
-		let url = JSONPost.data.url;
-		let thumbnail = JSONPost.data.thumbnail;
-		parsed.push({
-			title,
-			selftext,
-			url,
-			thumbnail
-		});
-	}
-	return parsed;
+  let parsed = [];
+  let toParse = JSON.parse(subJSON).data.children;
+  for (let JSONPost of toParse) {
+    let title = JSONPost.data.title;
+    let selftext = JSONPost.data.selftext;
+    let url = JSONPost.data.url;
+    let thumbnail = JSONPost.data.thumbnail;
+    parsed.push({
+      title,
+      selftext,
+      url,
+      thumbnail
+    });
+  }
+  return parsed;
 }
 
 function createCard(subData) {
-	// Pick which template to use based on post data.
-	if (subData.thumbnail != 'self' && subData.thumbnail != 'default') {
-		return `
+  // Pick which template to use based on post data.
+  if (subData.thumbnail != "self" && subData.thumbnail != "default") {
+    return `
         <div class="row mb-4 post">
           <div class="col">
             <div class="card">
@@ -50,8 +64,8 @@ function createCard(subData) {
           </div>
         </div>
         `;
-	}
-	return `
+  }
+  return `
     <div class="row mb-4 post">
       <div class="col">
         <div class="card">
@@ -67,21 +81,23 @@ function createCard(subData) {
 }
 
 function addPosts(postsArray) {
-	let postContainer = document.getElementById('posts');
-	let htmlPosts = '';
-	for (let post of postsArray) {
-		htmlPosts += createCard(post);
-	}
-	postContainer.innerHTML = htmlPosts;
+  let postContainer = document.getElementById("posts");
+  let htmlPosts = "";
+  for (let post of postsArray) {
+    htmlPosts += createCard(post);
+  }
+  postContainer.innerHTML = htmlPosts;
 }
 
 function getPostsBySelected() {
-	let selectedSub = document.getElementById('subreddits').value;
-	getSubredditPosts(selectedSub);
+  let selectedSub = document.getElementById("subreddits").value;
+  getSubredditPosts(selectedSub);
 }
 
 // Will need updating to make offline first
 // Add event handler
-document.getElementById('getPosts').addEventListener('click', getPostsBySelected);
+document
+  .getElementById("getPosts")
+  .addEventListener("click", getPostsBySelected);
 // Default load for
-getSubredditPosts('webdev');
+getSubredditPosts("webdev");

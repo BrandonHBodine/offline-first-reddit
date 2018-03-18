@@ -1,0 +1,6 @@
+{
+  "name": "Offline First Reddit",
+  "scope": "/",
+  "display": "standalone",
+  "start_url": "/"
+}
