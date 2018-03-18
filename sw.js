@@ -4,7 +4,8 @@ self.addEventListener("install", function(event) {
   event.waitUntil(
     caches.open("v1.2").then(function(cache) {
       return cache.addAll([
-        "/index.html",
+        "index.html",
+        "index.js",
         "https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css",
         "https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js",
         "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js",
@@ -16,14 +17,20 @@ self.addEventListener("install", function(event) {
 
 self.addEventListener("fetch", function(event) {
   let requestUrl = new URL(event.request.url);
-  // console.log(requestUrl);
+  // For a request to homepage respond with the index.html page
+  if (requestUrl.origin === location.origin) {
+    if (requestUrl.pathname === "/") {
+      return event.respondWith(caches.match("index.html"));
+    }
+  }
 
   // Check for request to the reddit API
   if (requestUrl.origin === "https://www.reddit.com") {
     // Get the subreddit, could make it more readable but I will just keep the pathname intacked
-    console.log("JSON request", requestUrl);
+    console.log("Reddit JSON request", requestUrl);
     return event.respondWith(servePosts(event.request));
   }
+
   event.respondWith(
     caches.match(event.request).then(function(response) {
       if (response) {
@@ -56,8 +63,7 @@ function servePosts(request) {
       return fetch(request).then(function(response) {
         cache.put(request, response.clone());
         return response;
-	  });
-	  
+      });
     });
   });
 }
