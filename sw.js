@@ -3,10 +3,12 @@ const postsCache = "postsCache-v1.0";
 
 let dirName = "";
 
-console.log("THIS", location);
-if (this.location.hostname !== "127.0.0.1") {
-  console.log("Updating service worker file paths to work with github pages");
-  dirName = "offline-first-reddit/";
+if (location.hostname !== "127.0.0.1") {
+  console.log(
+    "Updating service worker file paths to work with github pages",
+    location
+  );
+  dirName = "/offline-first-reddit/";
 }
 
 self.addEventListener("install", function(event) {
@@ -25,7 +27,7 @@ self.addEventListener("fetch", function(event) {
   let requestUrl = new URL(event.request.url);
   // For a request to homepage respond with the index.html page
   if (requestUrl.origin === location.origin) {
-    if (requestUrl.pathname === "/" || requestUrl.pathname === "/" + dirName) {
+    if (requestUrl.pathname === "/" || requestUrl.pathname === dirName) {
       return event.respondWith(
         caches
           .match(dirName + "index.html")
