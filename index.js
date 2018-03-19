@@ -1,11 +1,11 @@
 // Service Worker Registration
 // For hositng on github pages I will have to update the scope and the specificity of the sw.js file
 // ('/offline-first-reddit/sw.js', { scope: '/offline-first-reddit/' })
-let root = window.location.hostname;
+let dir = window.location.hostname;
 let serviceWorkerFilePath = "/sw.js";
 let serviceWorkerScope = { scope: "/" };
 
-if (root !== "127.0.0.1") {
+if (dir !== "127.0.0.1") {
   console.log("Updating file paths to work with github pages");
   serviceWorkerFilePath = "/offline-first-reddit/sw.js";
   serviceWorkerScope = { scope: "/offline-first-reddit/" };
@@ -129,8 +129,13 @@ function getPostsBySelected() {
 
 // Will need updating to make offline first
 // Add event handler
+// document
+//   .getElementById("getPosts")
+//   .addEventListener("click", getPostsBySelected);
+
 document
-  .getElementById("getPosts")
-  .addEventListener("click", getPostsBySelected);
+  .getElementById("subreddits")
+  .addEventListener("change", getPostsBySelected);
+
 // Default load for
 getSubredditPosts("webdev");
