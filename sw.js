@@ -26,7 +26,10 @@ self.addEventListener("fetch", function(event) {
 
   // For a request to homepage respond with the index.html page
   if (requestUrl.origin === location.origin) {
-    if (requestUrl.pathname === "/") {
+    if (
+      requestUrl.pathname === "/" ||
+      requestUrl.pathname === "/offline-first-reddit/"
+    ) {
       return event.respondWith(
         caches.match(dirName + "index.html").then(function(response) {
           if (response) {
