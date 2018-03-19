@@ -27,13 +27,18 @@ self.addEventListener("fetch", function(event) {
   if (requestUrl.origin === location.origin) {
     if (requestUrl.pathname === "/" || requestUrl.pathname === "/" + dirName) {
       return event.respondWith(
-        caches.match(dirName + "index.html").then(function(response) {
-          if (response) {
-            console.log("Cached Index Found");
-            return response;
-          }
-          return fetch(event.request);
-        })
+        caches
+          .match(dirName + "index.html")
+          .then(function(response) {
+            if (response) {
+              console.log("Cached Index Found");
+              return response;
+            }
+          })
+          .catch(function() {
+            console.log("No cache found. Trying network");
+            return fetch(event.request);
+          })
       );
     }
   }
