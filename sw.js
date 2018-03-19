@@ -28,7 +28,7 @@ self.addEventListener("fetch", function(event) {
   if (requestUrl.origin === location.origin) {
     if (
       requestUrl.pathname === "/" ||
-      requestUrl.pathname === "/offline-first-reddit/"
+      requestUrl.pathname === "offline-first-reddit/"
     ) {
       return event.respondWith(
         caches.match(dirName + "index.html").then(function(response) {
