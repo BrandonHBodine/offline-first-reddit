@@ -6,7 +6,7 @@ let serviceWorkerFilePath = "/sw.js";
 let serviceWorkerScope = { scope: "/" };
 
 if (root !== "127.0.0.1") {
-  console.log("Chaning file paths to work with github pages");
+  console.log("Updating file paths to work with github pages");
   serviceWorkerFilePath = "/offline-first-reddit/sw.js";
   serviceWorkerScope = { scope: "/offline-first-reddit/" };
 }
@@ -16,7 +16,13 @@ if ("serviceWorker" in navigator) {
   navigator.serviceWorker
     .register(serviceWorkerFilePath, serviceWorkerScope)
     .then(function(registration) {
-      console.log("Service worker registration succeeded:", registration);
+      if (registration.installing) {
+        console.log("Service Worker Installing");
+      } else if (registration.waiting) {
+        console.log("Service Worker Waiting");
+      } else if (registration.active) {
+        console.log("Service Worker Active");
+      }
     })
     .catch(function(error) {
       console.log("Service worker registration failed:", error);
@@ -33,11 +39,11 @@ function getSubredditPosts(sub) {
     .then(function(text) {
       let posts = parsePostsToSubData(text);
       addPosts(posts);
-      // console.log('Request successful', posts);
       return posts;
     })
     .catch(function(error) {
       console.log("Request failed", error);
+      errorPost();
     });
 }
 
@@ -101,6 +107,21 @@ function addPosts(postsArray) {
   postContainer.innerHTML = htmlPosts;
 }
 
+function errorPost() {
+  let postContainer = document.getElementById("posts");
+  postContainer.innerHTML = `  
+	<div class="row post">
+		<div class="col-sm-12">
+			<div class="card">
+				<h3 class="card-header post-title">No Content Yet</h3>
+				<div class="card-body">
+					<p class="card-text">Something is off, there is no offline content and no response from Reddit</p>
+				</div>
+			</div>
+		</div>
+	</div>
+`;
+}
 function getPostsBySelected() {
   let selectedSub = document.getElementById("subreddits").value;
   getSubredditPosts(selectedSub);
